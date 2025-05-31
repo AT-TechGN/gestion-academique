@@ -1,0 +1,19 @@
+{# templates/admin/dashboard.html.twig #}
+{% extends 'base.admin.html.twig' %}
+
+{% block title %}Tableau de Bord Admin{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    {% include 'admin/_stats_cards.html.twig' with {stats: stats} %}
+    
+    <div class="row mt-4">
+        <div class="col-md-6">
+            {% include 'admin/_recent_users.html.twig' with {users: recentUsers} %}
+        </div>
+        <div class="col-md-6">
+            {% include 'admin/_activity_log.html.twig' %}
+        </div>
+    </div>
+</div>
+{% endblock %}

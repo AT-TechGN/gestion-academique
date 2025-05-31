@@ -1,0 +1,27 @@
+{# templates/admin/_sidebar.html.twig #}
+<div class="bg-dark text-white p-3" style="width: 250px; min-height: 100vh;">
+    <div class="text-center mb-4">
+        <h4>Admin Panel</h4>
+    </div>
+    
+    <ul class="nav nav-pills flex-column">
+        <li class="nav-item">
+            <a href="{{ path('admin_dashboard') }}" 
+               class="nav-link text-white {{ app.request.get('_route') == 'admin_dashboard' ? 'active' : '' }}">
+                <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ path('admin_users') }}" 
+               class="nav-link text-white {{ app.request.get('_route') starts with 'admin_user' ? 'active' : '' }}">
+                <i class="fas fa-users me-2"></i> Utilisateurs
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ path('admin_courses') }}" 
+               class="nav-link text-white {{ app.request.get('_route') starts with 'admin_course' ? 'active' : '' }}">
+                <i class="fas fa-book me-2"></i> Cours
+            </a>
+        </li>
+    </ul>
+</div>
