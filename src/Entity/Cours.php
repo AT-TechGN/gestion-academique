@@ -29,6 +29,12 @@ class Cours
     private ?string $description = null;
 
     /**
+     * @var Collection<int, Enseignant>
+     */
+    #[ORM\ManyToMany(targetEntity: Enseignant::class, inversedBy: 'cours')]
+    private Collection $enseignants;
+
+    /**
      * @var Collection<int, Emploi>
      */
     #[ORM\OneToMany(targetEntity: Emploi::class, mappedBy: 'cours')]
@@ -51,6 +57,7 @@ class Cours
         $this->emplois = new ArrayCollection();
         $this->notes = new ArrayCollection();
         $this->documents = new ArrayCollection();
+        $this->enseignants = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -66,7 +73,6 @@ class Cours
     public function setNom(string $nom): static
     {
         $this->nom = $nom;
-
         return $this;
     }
 
@@ -78,7 +84,6 @@ class Cours
     public function setCode(string $code): static
     {
         $this->code = $code;
-
         return $this;
     }
 
@@ -90,7 +95,6 @@ class Cours
     public function setVolumeHoraire(int $volumeHoraire): static
     {
         $this->volumeHoraire = $volumeHoraire;
-
         return $this;
     }
 
@@ -102,7 +106,28 @@ class Cours
     public function setDescription(string $description): static
     {
         $this->description = $description;
+        return $this;
+    }
 
+    /**
+     * @return Collection<int, Enseignant>
+     */
+    public function getEnseignants(): Collection
+    {
+        return $this->enseignants;
+    }
+
+    public function addEnseignant(Enseignant $enseignant): static
+    {
+        if (!$this->enseignants->contains($enseignant)) {
+            $this->enseignants->add($enseignant);
+        }
+        return $this;
+    }
+
+    public function removeEnseignant(Enseignant $enseignant): static
+    {
+        $this->enseignants->removeElement($enseignant);
         return $this;
     }
 
@@ -120,19 +145,16 @@ class Cours
             $this->emplois->add($emploi);
             $emploi->setCours($this);
         }
-
         return $this;
     }
 
     public function removeEmploi(Emploi $emploi): static
     {
         if ($this->emplois->removeElement($emploi)) {
-            // set the owning side to null (unless already changed)
             if ($emploi->getCours() === $this) {
                 $emploi->setCours(null);
             }
         }
-
         return $this;
     }
 
@@ -150,19 +172,16 @@ class Cours
             $this->notes->add($note);
             $note->setCours($this);
         }
-
         return $this;
     }
 
     public function removeNote(Note $note): static
     {
         if ($this->notes->removeElement($note)) {
-            // set the owning side to null (unless already changed)
             if ($note->getCours() === $this) {
                 $note->setCours(null);
             }
         }
-
         return $this;
     }
 
@@ -180,19 +199,16 @@ class Cours
             $this->documents->add($document);
             $document->setCours($this);
         }
-
         return $this;
     }
 
     public function removeDocument(Document $document): static
     {
         if ($this->documents->removeElement($document)) {
-            // set the owning side to null (unless already changed)
             if ($document->getCours() === $this) {
                 $document->setCours(null);
             }
         }
-
         return $this;
     }
 }

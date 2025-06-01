@@ -1,0 +1,38 @@
+{% extends 'base.admin.html.twig' %}
+
+{% block content %}
+<h2>Emplois du temps</h2>
+<a href="{{ path('admin_emploi_new') }}" class="btn btn-primary mb-3">Nouvel emploi du temps</a>
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Cours</th>
+            <th>Enseignant</th>
+            <th>Salle</th>
+            <th>Jour</th>
+            <th>Heure début</th>
+            <th>Heure fin</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for emploi in emplois %}
+        <tr>
+            <td>{{ emploi.cours.nom }}</td>
+            <td>{{ emploi.enseignant.user ? emploi.enseignant.user.email : '' }}</td>
+            <td>{{ emploi.salle }}</td>
+            <td>{{ emploi.jour }}</td>
+            <td>{{ emploi.heureDebut|date('H:i') }}</td>
+            <td>{{ emploi.heureFin|date('H:i') }}</td>
+            <td>
+                <a href="{{ path('admin_emploi_edit', {id: emploi.id}) }}" class="btn btn-sm btn-warning">Modifier</a>
+                <form method="post" action="{{ path('admin_emploi_delete', {id: emploi.id}) }}" style="display:inline-block;" onsubmit="return confirm('Supprimer cet emploi ?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ emploi.id) }}">
+                    <button class="btn btn-sm btn-danger">Supprimer</button>
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

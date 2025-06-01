@@ -1,0 +1,43 @@
+{% extends 'base.admin.html.twig' %}
+
+{% block content %}
+<h2>{% if emploi is defined %}Modifier{% else %}Nouvel{% endif %} emploi du temps</h2>
+<div class="card shadow-sm p-4" style="max-width:600px;margin:auto;">
+    {{ form_start(form) }}
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                {{ form_label(form.cours) }}
+                {{ form_widget(form.cours, {'attr': {'class': 'form-select'}}) }}
+                {{ form_errors(form.cours) }}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ form_label(form.enseignant) }}
+                {{ form_widget(form.enseignant, {'attr': {'class': 'form-select'}}) }}
+                {{ form_errors(form.enseignant) }}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ form_label(form.salle) }}
+                {{ form_widget(form.salle, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.salle) }}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ form_label(form.jour) }}
+                {{ form_widget(form.jour, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.jour) }}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ form_label(form.heureDebut) }}
+                {{ form_widget(form.heureDebut, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.heureDebut) }}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ form_label(form.heureFin) }}
+                {{ form_widget(form.heureFin, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.heureFin) }}
+            </div>
+        </div>
+        <button class="btn btn-success mt-3">Enregistrer</button>
+        <a href="{{ path('admin_emplois') }}" class="btn btn-secondary mt-3">Retour</a>
+    {{ form_end(form) }}
+</div>
+{% endblock %}

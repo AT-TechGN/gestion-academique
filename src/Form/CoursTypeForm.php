@@ -1,6 +1,5 @@
 <?php
 
-// src/Form/CoursType.php
 namespace App\Form;
 
 use App\Entity\Cours;
@@ -35,13 +34,16 @@ class CoursTypeForm extends AbstractType
                 'label' => 'Description',
                 'required' => false
             ])
-            ->add('enseignant', EntityType::class, [
+            ->add('enseignants', EntityType::class, [
                 'class' => Enseignant::class,
                 'choice_label' => function($enseignant) {
-                    return $enseignant->getUser()->getEmail();
+                    $user = $enseignant->getUser();
+                    return $user ? $user->getEmail() : 'Enseignant';
                 },
+                'multiple' => true,
+                'expanded' => false,
                 'attr' => ['class' => 'form-select'],
-                'label' => 'Enseignant responsable'
+                'label' => 'Enseignants associés'
             ]);
     }
 

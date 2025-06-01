@@ -67,6 +67,26 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a href="{{ path('admin_students') }}" class="nav-link {{ app.request.get('_route') starts with 'admin_student' ? 'active' : '' }}">
+                    <i class="bi bi-person-lines-fill me-2"></i> Étudiants
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ path('admin_notes') }}" class="nav-link {{ app.request.get('_route') starts with 'admin_note' ? 'active' : '' }}">
+                    <i class="bi bi-clipboard-data me-2"></i> Notes
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ path('admin_teachers') }}" class="nav-link {{ app.request.get('_route') starts with 'admin_teacher' ? 'active' : '' }}">
+                    <i class="bi bi-person-badge me-2"></i> Enseignants
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ path('admin_emplois') }}" class="nav-link {{ app.request.get('_route') starts with 'admin_emploi' ? 'active' : '' }}">
+                    <i class="bi bi-calendar-week me-2"></i> Emplois du temps
+                </a>
+            </li>
+            <li class="nav-item">
                 <a href="{{ path('admin_courses') }}"
                    class="nav-link {{ app.request.get('_route') starts with 'admin_course' ? 'active' : '' }}">
                     <i class="bi bi-journal-bookmark me-2"></i> Cours

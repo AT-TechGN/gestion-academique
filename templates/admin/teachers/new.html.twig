@@ -1,0 +1,33 @@
+{% extends 'base.admin.html.twig' %}
+
+{% block content %}
+<h2>Nouvel enseignant</h2>
+<div class="card shadow-sm p-4" style="max-width:600px;margin:auto;">
+    {{ form_start(form) }}
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                {{ form_label(form.user) }}
+                {{ form_widget(form.user, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.user) }}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ form_label(form.specialite) }}
+                {{ form_widget(form.specialite, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.specialite) }}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ form_label(form.telephone) }}
+                {{ form_widget(form.telephone, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.telephone) }}
+            </div>
+            <div class="col-md-12 mb-3">
+                {{ form_label(form.cours) }}
+                {{ form_widget(form.cours, {'attr': {'class': 'form-select', 'multiple': 'multiple'}}) }}
+                {{ form_errors(form.cours) }}
+            </div>
+        </div>
+        <button class="btn btn-success mt-3">Enregistrer</button>
+        <a href="{{ path('admin_teachers') }}" class="btn btn-secondary mt-3">Retour</a>
+    {{ form_end(form) }}
+</div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'base.admin.html.twig' %}
+
+{% block content %}
+<h2>Liste des étudiants</h2>
+<a href="{{ path('admin_student_new') }}" class="btn btn-primary mb-3">Nouvel étudiant</a>
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Photo</th>
+            <th>Matricule</th>
+            <th>Date naissance</th>
+            <th>Adresse</th>
+            <th>Téléphone</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for student in students %}
+        <tr>
+            <td>
+                {% if student.photo %}
+                    <img src="{{ asset('uploads/photos/' ~ student.photo) }}" width="50" height="50" class="rounded-circle"/>
+                {% endif %}
+            </td>
+            <td>{{ student.matricule }}</td>
+            <td>{{ student.dateNaissance ? student.dateNaissance|date('d/m/Y') : '' }}</td>
+            <td>{{ student.adresse }}</td>
+            <td>{{ student.telephone }}</td>
+            <td>
+                <a href="{{ path('admin_student_edit', {id: student.id}) }}" class="btn btn-sm btn-warning">Modifier</a>
+                <form method="post" action="{{ path('admin_student_delete', {id: student.id}) }}" style="display:inline-block;" onsubmit="return confirm('Supprimer cet étudiant ?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ student.id) }}">
+                    <button class="btn btn-sm btn-danger">Supprimer</button>
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

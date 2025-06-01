@@ -1,0 +1,36 @@
+{% extends 'base.admin.html.twig' %}
+
+{% block content %}
+<h2>{% if cours is defined %}Modifier{% else %}Nouveau{% endif %} cours</h2>
+<div class="card shadow-sm p-4" style="max-width:600px;margin:auto;">
+    {{ form_start(form) }}
+        <div class="mb-3">
+            {{ form_label(form.nom) }}
+            {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.nom) }}
+        </div>
+        <div class="mb-3">
+            {{ form_label(form.code) }}
+            {{ form_widget(form.code, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.code) }}
+        </div>
+        <div class="mb-3">
+            {{ form_label(form.volumeHoraire) }}
+            {{ form_widget(form.volumeHoraire, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.volumeHoraire) }}
+        </div>
+        <div class="mb-3">
+            {{ form_label(form.description) }}
+            {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': 4}}) }}
+            {{ form_errors(form.description) }}
+        </div>
+        <div class="mb-3">
+            {{ form_label(form.enseignants) }}
+            {{ form_widget(form.enseignants, {'attr': {'class': 'form-select', 'multiple': 'multiple'}}) }}
+            {{ form_errors(form.enseignants) }}
+        </div>
+        <button class="btn btn-success mt-3">Enregistrer</button>
+        <a href="{{ path('admin_courses') }}" class="btn btn-secondary mt-3">Retour</a>
+    {{ form_end(form) }}
+</div>
+{% endblock %}

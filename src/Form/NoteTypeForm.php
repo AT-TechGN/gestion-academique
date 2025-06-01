@@ -1,6 +1,5 @@
 <?php
 
-// src/Form/NoteType.php
 namespace App\Form;
 
 use App\Entity\Note;
@@ -21,7 +20,9 @@ class NoteTypeForm extends AbstractType
             ->add('etudiant', EntityType::class, [
                 'class' => Etudiant::class,
                 'choice_label' => function($etudiant) {
-                    return $etudiant->getUser()->getEmail() . ' - ' . $etudiant->getMatricule();
+                    $user = $etudiant->getUser();
+                    $email = $user ? $user->getEmail() : 'Utilisateur inconnu';
+                    return $email . ' - ' . $etudiant->getMatricule();
                 },
                 'attr' => ['class' => 'form-select'],
                 'label' => 'Étudiant'

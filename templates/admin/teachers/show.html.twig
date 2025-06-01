@@ -1,0 +1,14 @@
+{% extends 'base.admin.html.twig' %}
+{% block content %}
+<h2>Emploi du temps de {{ teacher.user.email }}</h2>
+<ul>
+    {% for emploi in teacher.emplois %}
+        <li>
+            {{ emploi.jour }} : {{ emploi.heureDebut|date('H:i') }} - {{ emploi.heureFin|date('H:i') }} ({{ emploi.cours.nom }})
+        </li>
+    {% else %}
+        <li>Aucun emploi du temps</li>
+    {% endfor %}
+</ul>
+<a href="{{ path('admin_teachers') }}" class="btn btn-secondary">Retour</a>
+{% endblock %}

@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : sam. 31 mai 2025 à 23:46
--- Version du serveur : 10.4.27-MariaDB
--- Version de PHP : 8.2.0
+-- Généré le : lun. 02 juin 2025 à 01:23
+-- Version du serveur : 10.4.32-MariaDB
+-- Version de PHP : 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -38,6 +38,17 @@ CREATE TABLE `cours` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `cours_enseignant`
+--
+
+CREATE TABLE `cours_enseignant` (
+  `cours_id` int(11) NOT NULL,
+  `enseignant_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `doctrine_migration_versions`
 --
 
@@ -53,7 +64,11 @@ CREATE TABLE `doctrine_migration_versions` (
 
 INSERT INTO `doctrine_migration_versions` (`version`, `executed_at`, `execution_time`) VALUES
 ('DoctrineMigrations\\Version20250530041446', '2025-05-30 06:15:57', 16179),
-('DoctrineMigrations\\Version20250531194702', '2025-05-31 21:48:24', 685);
+('DoctrineMigrations\\Version20250531194702', '2025-05-31 21:48:24', 685),
+('DoctrineMigrations\\Version20250601042954', '2025-06-01 06:33:42', 13),
+('DoctrineMigrations\\Version20250601203534', '2025-06-01 22:36:51', 186),
+('DoctrineMigrations\\Version20250601230218', '2025-06-02 01:02:24', 59),
+('DoctrineMigrations\\Version20250601231926', '2025-06-02 01:19:31', 120);
 
 -- --------------------------------------------------------
 
@@ -98,6 +113,24 @@ CREATE TABLE `enseignant` (
   `telephone` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Déchargement des données de la table `enseignant`
+--
+
+INSERT INTO `enseignant` (`id`, `user_id`, `specialite`, `telephone`) VALUES
+(1, 1, 'PHP', '627979359');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `enseignant_cours`
+--
+
+CREATE TABLE `enseignant_cours` (
+  `enseignant_id` int(11) NOT NULL,
+  `cours_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- --------------------------------------------------------
 
 --
@@ -113,6 +146,13 @@ CREATE TABLE `etudiant` (
   `telephone` varchar(20) NOT NULL,
   `photo` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `etudiant`
+--
+
+INSERT INTO `etudiant` (`id`, `user_id`, `matricule`, `date_naissance`, `adresse`, `telephone`, `photo`) VALUES
+(1, NULL, '664120792245', '2004-05-11', 'Coyah', '627979359', '683cb34f95f36.png');
 
 -- --------------------------------------------------------
 
@@ -162,15 +202,16 @@ CREATE TABLE `user` (
   `email` varchar(180) NOT NULL,
   `roles` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '(DC2Type:json)' CHECK (json_valid(`roles`)),
   `password` varchar(255) NOT NULL,
-  `is_verified` tinyint(1) NOT NULL
+  `is_verified` tinyint(1) NOT NULL,
+  `created_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `user`
 --
 
-INSERT INTO `user` (`id`, `email`, `roles`, `password`, `is_verified`) VALUES
-(1, 'alcenytraore68@gmail.com', '[\"ROLE_ADMIN\"]', '$2y$13$4pyBtf0hA8PzNF3rYQG.3ezBZ7m2Q7pxHj.NVflmiU3rutsEMbYlS', 0);
+INSERT INTO `user` (`id`, `email`, `roles`, `password`, `is_verified`, `created_at`) VALUES
+(1, 'alcenytraore68@gmail.com', '[\"ROLE_ADMIN\"]', '$2y$13$4pyBtf0hA8PzNF3rYQG.3ezBZ7m2Q7pxHj.NVflmiU3rutsEMbYlS', 0, '2025-05-31 20:33:42');
 
 --
 -- Index pour les tables déchargées
@@ -181,6 +222,14 @@ INSERT INTO `user` (`id`, `email`, `roles`, `password`, `is_verified`) VALUES
 --
 ALTER TABLE `cours`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Index pour la table `cours_enseignant`
+--
+ALTER TABLE `cours_enseignant`
+  ADD PRIMARY KEY (`cours_id`,`enseignant_id`),
+  ADD KEY `IDX_845FDD887ECF78B0` (`cours_id`),
+  ADD KEY `IDX_845FDD88E455FCC0` (`enseignant_id`);
 
 --
 -- Index pour la table `doctrine_migration_versions`
@@ -209,6 +258,14 @@ ALTER TABLE `emploi`
 ALTER TABLE `enseignant`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `UNIQ_81A72FA1A76ED395` (`user_id`);
+
+--
+-- Index pour la table `enseignant_cours`
+--
+ALTER TABLE `enseignant_cours`
+  ADD PRIMARY KEY (`enseignant_id`,`cours_id`),
+  ADD KEY `IDX_D6684A95E455FCC0` (`enseignant_id`),
+  ADD KEY `IDX_D6684A957ECF78B0` (`cours_id`);
 
 --
 -- Index pour la table `etudiant`
@@ -267,13 +324,13 @@ ALTER TABLE `emploi`
 -- AUTO_INCREMENT pour la table `enseignant`
 --
 ALTER TABLE `enseignant`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT pour la table `etudiant`
 --
 ALTER TABLE `etudiant`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT pour la table `messenger_messages`
@@ -298,6 +355,13 @@ ALTER TABLE `user`
 --
 
 --
+-- Contraintes pour la table `cours_enseignant`
+--
+ALTER TABLE `cours_enseignant`
+  ADD CONSTRAINT `FK_845FDD887ECF78B0` FOREIGN KEY (`cours_id`) REFERENCES `cours` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_845FDD88E455FCC0` FOREIGN KEY (`enseignant_id`) REFERENCES `enseignant` (`id`) ON DELETE CASCADE;
+
+--
 -- Contraintes pour la table `document`
 --
 ALTER TABLE `document`
@@ -315,6 +379,13 @@ ALTER TABLE `emploi`
 --
 ALTER TABLE `enseignant`
   ADD CONSTRAINT `FK_81A72FA1A76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
+
+--
+-- Contraintes pour la table `enseignant_cours`
+--
+ALTER TABLE `enseignant_cours`
+  ADD CONSTRAINT `FK_D6684A957ECF78B0` FOREIGN KEY (`cours_id`) REFERENCES `cours` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_D6684A95E455FCC0` FOREIGN KEY (`enseignant_id`) REFERENCES `enseignant` (`id`) ON DELETE CASCADE;
 
 --
 -- Contraintes pour la table `etudiant`

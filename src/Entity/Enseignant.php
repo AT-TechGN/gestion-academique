@@ -31,9 +31,16 @@ class Enseignant
     #[ORM\OneToMany(targetEntity: Emploi::class, mappedBy: 'enseignant')]
     private Collection $emplois;
 
+    /**
+     * @var Collection<int, Cours>
+     */
+    #[ORM\ManyToMany(targetEntity: Cours::class, inversedBy: 'enseignants')]
+    private Collection $cours;
+
     public function __construct()
     {
         $this->emplois = new ArrayCollection();
+        $this->cours = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -49,7 +56,6 @@ class Enseignant
     public function setUser(User $user): static
     {
         $this->user = $user;
-
         return $this;
     }
 
@@ -61,7 +67,6 @@ class Enseignant
     public function setSpecialite(string $specialite): static
     {
         $this->specialite = $specialite;
-
         return $this;
     }
 
@@ -73,7 +78,6 @@ class Enseignant
     public function setTelephone(string $telephone): static
     {
         $this->telephone = $telephone;
-
         return $this;
     }
 
@@ -91,19 +95,38 @@ class Enseignant
             $this->emplois->add($emploi);
             $emploi->setEnseignant($this);
         }
-
         return $this;
     }
 
     public function removeEmploi(Emploi $emploi): static
     {
         if ($this->emplois->removeElement($emploi)) {
-            // set the owning side to null (unless already changed)
             if ($emploi->getEnseignant() === $this) {
                 $emploi->setEnseignant(null);
             }
         }
+        return $this;
+    }
 
+    /**
+     * @return Collection<int, Cours>
+     */
+    public function getCours(): Collection
+    {
+        return $this->cours;
+    }
+
+    public function addCours(Cours $cours): static
+    {
+        if (!$this->cours->contains($cours)) {
+            $this->cours->add($cours);
+        }
+        return $this;
+    }
+
+    public function removeCours(Cours $cours): static
+    {
+        $this->cours->removeElement($cours);
         return $this;
     }
 }

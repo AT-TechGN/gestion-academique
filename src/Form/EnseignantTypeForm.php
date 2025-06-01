@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Enseignant;
 use App\Entity\User;
+use App\Entity\Cours;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -18,7 +19,14 @@ class EnseignantTypeForm extends AbstractType
             ->add('telephone')
             ->add('user', EntityType::class, [
                 'class' => User::class,
-                'choice_label' => 'id',
+                'choice_label' => 'email',
+            ])
+            ->add('cours', EntityType::class, [
+                'class' => Cours::class,
+                'choice_label' => 'nom',
+                'multiple' => true,
+                'expanded' => false,
+                'required' => false,
             ])
         ;
     }
