@@ -38,6 +38,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[\Symfony\Component\Validator\Constraints\NotBlank(groups: ['registration'])]
     private ?string $plainPassword = null;
 
+    // Ajout de la propriété createdAt
+    #[ORM\Column(type: 'datetime')]
+    private ?\DateTimeInterface $createdAt = null;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTimeImmutable();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -129,6 +138,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPlainPassword(?string $plainPassword): static
     {
         $this->plainPassword = $plainPassword;
+        return $this;
+    }
+
+    // Getters et setters pour createdAt
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): static
+    {
+        $this->createdAt = $createdAt;
         return $this;
     }
 }

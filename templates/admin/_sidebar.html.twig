@@ -1,27 +1,82 @@
 {# templates/admin/_sidebar.html.twig #}
-<div class="bg-dark text-white p-3" style="width: 250px; min-height: 100vh;">
-    <div class="text-center mb-4">
-        <h4>Admin Panel</h4>
+<style>
+    @media (max-width: 991.98px) {
+        .sidebar-admin {
+            width: 100% !important;
+            min-height: auto !important;
+            position: static !important;
+            border-radius: 0 0 12px 12px;
+        }
+    }
+    .sidebar-admin {
+        background: #fff;
+        color: #0d6efd;
+        width: 250px;
+        min-height: 100vh;
+        box-shadow: 2px 0 12px rgba(13,110,253,0.08);
+        border-radius: 0 16px 16px 0;
+        transition: width 0.3s;
+    }
+    .sidebar-admin .nav-link.active, .sidebar-admin .nav-link:hover {
+        background: #0d6efd !important;
+        color: #fff !important;
+        font-weight: bold;
+        border-radius: 8px;
+    }
+    .sidebar-admin .nav-link {
+        color: #0d6efd;
+        transition: background 0.2s, color 0.2s;
+        margin-bottom: 6px;
+    }
+    .sidebar-admin .logout-btn {
+        background: #f8f9fa;
+        color: #dc3545;
+        border: none;
+        width: 100%;
+        margin-top: 30px;
+        font-weight: bold;
+        border-radius: 8px;
+        transition: background 0.2s, color 0.2s;
+    }
+    .sidebar-admin .logout-btn:hover {
+        background: #dc3545;
+        color: #fff;
+    }
+    .sidebar-admin h4 {
+        color: #0d6efd;
+        font-weight: bold;
+    }
+</style>
+
+<div class="sidebar-admin p-3 d-flex flex-column justify-content-between">
+    <div>
+        <div class="text-center mb-4">
+            <h4><i class="bi bi-shield-lock"></i> Admin Panel</h4>
+        </div>
+        <ul class="nav nav-pills flex-column">
+            <li class="nav-item">
+                <a href="{{ path('admin_dashboard') }}"
+                   class="nav-link {{ app.request.get('_route') == 'admin_dashboard' ? 'active' : '' }}">
+                    <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ path('admin_users') }}"
+                   class="nav-link {{ app.request.get('_route') starts with 'admin_user' ? 'active' : '' }}">
+                    <i class="bi bi-people me-2"></i> Utilisateurs
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ path('admin_courses') }}"
+                   class="nav-link {{ app.request.get('_route') starts with 'admin_course' ? 'active' : '' }}">
+                    <i class="bi bi-journal-bookmark me-2"></i> Cours
+                </a>
+            </li>
+        </ul>
     </div>
-    
-    <ul class="nav nav-pills flex-column">
-        <li class="nav-item">
-            <a href="{{ path('admin_dashboard') }}" 
-               class="nav-link text-white {{ app.request.get('_route') == 'admin_dashboard' ? 'active' : '' }}">
-                <i class="fas fa-tachometer-alt me-2"></i> Dashboard
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="{{ path('admin_users') }}" 
-               class="nav-link text-white {{ app.request.get('_route') starts with 'admin_user' ? 'active' : '' }}">
-                <i class="fas fa-users me-2"></i> Utilisateurs
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="{{ path('admin_courses') }}" 
-               class="nav-link text-white {{ app.request.get('_route') starts with 'admin_course' ? 'active' : '' }}">
-                <i class="fas fa-book me-2"></i> Cours
-            </a>
-        </li>
-    </ul>
+    <form method="post" action="{{ path('app_logout') }}">
+        <button type="submit" class="logout-btn mt-4">
+            <i class="bi bi-box-arrow-right me-2"></i> Déconnexion
+        </button>
+    </form>
 </div>

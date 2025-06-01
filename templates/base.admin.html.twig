@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="d-flex">
+    {% include 'admin/_sidebar.html.twig' %}
+    <div class="flex-grow-1 p-4">
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success alert-dismissible fade show">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+        {% block content %}{% endblock %}
+    </div>
+</div>
+{% endblock %}

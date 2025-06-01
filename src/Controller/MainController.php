@@ -1,6 +1,4 @@
 <?php
-// src/Controller/MainController.php
-
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,20 +10,26 @@ class MainController extends AbstractController
     #[Route('/', name: 'app_home')]
     public function index(): Response
     {
-        // Solution robuste pour XAMPP
         if (!$this->getUser()) {
             return $this->redirectToRoute('app_login');
         }
 
-        // Gestion des redirections selon le rôle
+        // Redirection selon le rôle
         if ($this->isGranted('ROLE_ADMIN')) {
-            return $this->redirectToRoute('app_admin');
+            return $this->redirectToRoute('admin_dashboard');
         }
-        
+
         if ($this->isGranted('ROLE_TEACHER')) {
-            return $this->redirectToRoute('app_teacher');
+            // Remplace 'teacher_dashboard' par le nom réel de ta route enseignant
+            return $this->redirectToRoute('teacher_dashboard');
         }
-        
-        return $this->redirectToRoute('app_student');
+
+        if ($this->isGranted('ROLE_STUDENT')) {
+            // Remplace 'student_dashboard' par le nom réel de ta route étudiant
+            return $this->redirectToRoute('student_dashboard');
+        }
+
+        // Par défaut, redirige vers la page de login
+        return $this->redirectToRoute('app_login');
     }
 }

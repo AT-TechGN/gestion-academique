@@ -1,18 +1,120 @@
 {# templates/admin/dashboard.html.twig #}
 {% extends 'base.admin.html.twig' %}
 
-{% block title %}Tableau de Bord Admin{% endblock %}
+{% block title %}Tableau de Bord{% endblock %}
 
 {% block content %}
 <div class="container-fluid">
-    {% include 'admin/_stats_cards.html.twig' with {stats: stats} %}
+    <h1 class="h3 mb-4">Tableau de Bord</h1>
     
-    <div class="row mt-4">
-        <div class="col-md-6">
-            {% include 'admin/_recent_users.html.twig' with {users: recentUsers} %}
+    <div class="row">
+        <!-- Stat Utilisateurs -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-start-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Utilisateurs</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.users }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-people fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-md-6">
-            {% include 'admin/_activity_log.html.twig' %}
+
+        <!-- Stat Étudiants -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-start-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Étudiants</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.students }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-person-video3 fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stat Enseignants -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-start-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Enseignants</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.teachers }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-person-badge fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stat Cours -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-start-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Cours</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.courses }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-book fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Derniers Utilisateurs -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Derniers utilisateurs inscrits</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Email</th>
+                            <th>Rôle</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in recentUsers %}
+                        <tr>
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>
+                                {% for role in user.roles %}
+                                    <span class="badge bg-{{ role == 'ROLE_ADMIN' ? 'danger' : (role == 'ROLE_TEACHER' ? 'warning' : 'primary') }}">
+                                        {{ role }}
+                                    </span>
+                                {% endfor %}
+                            </td>
+                            <td>{{ user.createdAt|date('d/m/Y') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
