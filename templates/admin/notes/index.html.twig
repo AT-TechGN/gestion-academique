@@ -17,7 +17,7 @@
         <tr>
             <td>{{ note.etudiant ? note.etudiant.matricule : '' }}</td>
             <td>{{ note.cours ? note.cours.nom : '' }}</td>
-            <td>{{ note.valeur }}</td>
+            <td>{{ note.note }}</td>
             <td>
                 <a href="{{ path('admin_note_edit', {id: note.id}) }}" class="btn btn-sm btn-warning">Modifier</a>
                 <form method="post" action="{{ path('admin_note_delete', {id: note.id}) }}" style="display:inline-block;" onsubmit="return confirm('Supprimer cette note ?');">
