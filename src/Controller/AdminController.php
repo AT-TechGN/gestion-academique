@@ -18,6 +18,9 @@ use App\Repository\EtudiantRepository;
 use App\Repository\NoteRepository;
 use App\Entity\Emploi;
 use App\Form\EmploiTypeForm;
+use App\Entity\Document;
+use App\Form\DocumentTypeForm;
+use App\Repository\DocumentRepository;
 use App\Repository\EmploiRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -34,27 +37,63 @@ class AdminController extends AbstractController
 {
     // Dashboard
     #[Route('/', name: 'admin_dashboard')]
-    public function dashboard(UserRepository $userRepo, CoursRepository $coursRepo): Response
-    {
+    public function dashboard(
+        UserRepository $userRepo,
+        CoursRepository $coursRepo,
+        EtudiantRepository $etudiantRepo,
+        EnseignantRepository $enseignantRepo,
+        NoteRepository $noteRepo
+    ): Response {
+        // Effectifs
+        $stats = [
+            'users' => $userRepo->count([]),
+            'students' => $etudiantRepo->count([]),
+            'teachers' => $enseignantRepo->count([]),
+            'courses' => $coursRepo->count([])
+        ];
+
+        // Performances académiques
+        $notes = $noteRepo->findAll();
+        $nbNotes = count($notes);
+        $somme = 0;
+        $nbNotesFaibles = 0;
+        foreach ($notes as $note) {
+            $somme += $note->getNote();
+            if ($note->getNote() < 10) $nbNotesFaibles++;
+        }
+        $moyenne = $nbNotes > 0 ? round($somme / $nbNotes, 2) : null;
+
+        // Alertes
+        $pendingUsers = []; // À adapter selon ta logique (ex: $userRepo->findBy(['isValidated' => false]))
+        $coursSansEnseignant = $coursRepo->createQueryBuilder('c')
+            ->leftJoin('c.enseignants', 'e')
+            ->andWhere('e.id IS NULL')
+            ->getQuery()->getResult();
+
+        // Derniers utilisateurs
+        $recentUsers = method_exists($userRepo, 'findRecentUsers')
+            ? $userRepo->findRecentUsers()
+            : $userRepo->findBy([], ['id' => 'DESC'], 5);
+
         return $this->render('admin/dashboard.html.twig', [
-            'stats' => [
-                'users' => $userRepo->count([]),
-                'students' => $userRepo->countByRole('ROLE_STUDENT'),
-                'teachers' => $userRepo->countByRole('ROLE_TEACHER'),
-                'courses' => $coursRepo->count([])
-            ],
-            'recentUsers' => $userRepo->findRecentUsers()
+            'stats' => $stats,
+            'moyenne' => $moyenne,
+            'nbNotesFaibles' => $nbNotesFaibles,
+            'pendingUsers' => $pendingUsers,
+            'coursSansEnseignant' => $coursSansEnseignant,
+            'recentUsers' => $recentUsers,
         ]);
     }
 
-    // Gestion Utilisateurs
     #[Route('/users', name: 'admin_users')]
     public function users(UserRepository $userRepo): Response
     {
         return $this->render('admin/users/index.html.twig', [
-            'users' => $userRepo->findAllWithDetails()
+            'users' => $userRepo->findAll()
         ]);
     }
+
+     
 
     #[Route('/user/new', name: 'admin_user_new')]
     public function newUser(Request $request, EntityManagerInterface $em): Response
@@ -433,4 +472,128 @@ class AdminController extends AbstractController
         }
         return $this->redirectToRoute('admin_courses');
     }
+
+    // Moyennes générales des notes des étudiants
+    // Affiche la moyenne de chaque étudiant
+    #[Route('/notes/moyennes', name: 'admin_notes_moyennes')]
+    public function notesMoyennes(NoteRepository $noteRepo, EtudiantRepository $etudiantRepo): Response
+    {
+        $etudiants = $etudiantRepo->findAll();
+        $moyennes = [];
+        foreach ($etudiants as $etudiant) {
+            $notes = $noteRepo->findBy(['etudiant' => $etudiant]);
+            $somme = 0;
+            $nb = count($notes);
+            foreach ($notes as $note) {
+                $somme += $note->getNote();
+            }
+            $moyennes[$etudiant->getId()] = $nb > 0 ? round($somme / $nb, 2) : null;
+        }
+        return $this->render('admin/notes/moyennes.html.twig', [
+            'etudiants' => $etudiants,
+            'moyennes' => $moyennes
+        ]);
+    }
+
+    // Relevé de notes d'un étudiant
+    #[Route('/notes/releve/{id}', name: 'admin_notes_releve')]
+    public function releveNotes(Etudiant $etudiant, NoteRepository $noteRepo): Response
+    {
+        $notes = $noteRepo->findBy(['etudiant' => $etudiant]);
+        $somme = 0;
+        $nb = count($notes);
+        foreach ($notes as $note) {
+            $somme += $note->getNote();
+        }
+        $moyenne = $nb > 0 ? round($somme / $nb, 2) : null;
+        return $this->render('admin/notes/releve.html.twig', [
+            'etudiant' => $etudiant,
+            'notes' => $notes,
+            'moyenne' => $moyenne
+        ]);
+    }
+
+    // Publier toutes les notes d'un étudiant
+    #[Route('/notes/publish/student/{id}', name: 'admin_notes_publish_student')]
+    public function publishNotesByStudent(Etudiant $etudiant, NoteRepository $noteRepo, EntityManagerInterface $em): Response
+    {
+        $notes = $noteRepo->findBy(['etudiant' => $etudiant]);
+        foreach ($notes as $note) {
+            $note->setIsPublished(true);
+        }
+        $em->flush();
+        $this->addFlash('success', 'Toutes les notes de cet étudiant ont été publiées.');
+        return $this->redirectToRoute('admin_notes');
+    }
+
+    // Publier toutes les notes d'un cours
+    #[Route('/notes/publish/course/{id}', name: 'admin_notes_publish_course')]
+    public function publishNotesByCourse(Cours $cours, NoteRepository $noteRepo, EntityManagerInterface $em): Response
+    {
+        $notes = $noteRepo->findBy(['cours' => $cours]);
+        foreach ($notes as $note) {
+            $note->setIsPublished(true);
+        }
+        $em->flush();
+        $this->addFlash('success', 'Toutes les notes de ce cours ont été publiées.');
+        return $this->redirectToRoute('admin_notes');
+    }
+
+    // Liste des documents
+    #[Route('/documents', name: 'admin_documents')]
+    public function documents(DocumentRepository $docRepo): Response
+    {
+        return $this->render('admin/documents/index.html.twig', [
+            'documents' => $docRepo->findBy([], ['dateUpload' => 'DESC'])
+        ]);
+    }
+
+    // Ajout d'un document
+    #[Route('/document/new', name: 'admin_document_new')]
+    public function newDocument(Request $request, EntityManagerInterface $em): Response
+    {
+        $document = new Document();
+        $form = $this->createForm(DocumentTypeForm::class, $document);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var UploadedFile $file */
+            $file = $form->get('fichier')->getData();
+            if ($file) {
+                $filename = uniqid().'.'.$file->guessExtension();
+                $file->move($this->getParameter('documents_directory'), $filename);
+                $document->setFichier($filename);
+            }
+            $em->persist($document);
+            $em->flush();
+            $this->addFlash('success', 'Document ajouté');
+            return $this->redirectToRoute('admin_documents');
+        }
+
+        return $this->render('admin/documents/new.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
+
+    // Téléchargement d'un document
+    #[Route('/document/download/{id}', name: 'admin_document_download')]
+    public function downloadDocument(Document $document)
+    {
+        $filepath = $this->getParameter('documents_directory').'/'.$document->getFichier();
+        return $this->file($filepath, $document->getTitre());
+    }
+
+    // (Optionnel) Suppression d'un document
+    #[Route('/document/{id}/delete', name: 'admin_document_delete', methods: ['POST'])]
+    public function deleteDocument(Document $document, Request $request, EntityManagerInterface $em): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$document->getId(), $request->request->get('_token'))) {
+            $em->remove($document);
+            $em->flush();
+            $this->addFlash('success', 'Document supprimé');
+        }
+        return $this->redirectToRoute('admin_documents');
+    }
+
+    
 }

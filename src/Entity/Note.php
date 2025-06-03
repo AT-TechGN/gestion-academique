@@ -28,6 +28,32 @@ class Note
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTime $dateEval = null;
 
+    #[ORM\Column(length: 20)]
+    private ?string $type = null; // 'partiel', 'examen', etc.
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+    public function setType(?string $type): static
+    {
+        $this->type = $type;
+        return $this;
+    }
+
+    #[ORM\Column(type: 'boolean')]
+    private bool $isPublished = false;
+
+    public function isPublished(): bool
+    {
+        return $this->isPublished;
+    }
+    public function setIsPublished(bool $isPublished): static
+    {
+        $this->isPublished = $isPublished;
+        return $this;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

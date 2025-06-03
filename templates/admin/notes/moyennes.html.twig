@@ -1,0 +1,22 @@
+{% extends 'base.admin.html.twig' %}
+{% block content %}
+<h2>Moyennes des étudiants</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Matricule</th>
+            <th>Nom</th>
+            <th>Moyenne</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for etudiant in etudiants %}
+        <tr>
+            <td>{{ etudiant.matricule }}</td>
+            <td>{{ etudiant.user ? etudiant.user.nom ~ ' ' ~ etudiant.user.prenom : '' }}</td>
+            <td>{{ moyennes[etudiant.id] is not null ? moyennes[etudiant.id] : 'N/A' }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

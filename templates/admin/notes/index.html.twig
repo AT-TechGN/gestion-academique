@@ -9,6 +9,7 @@
             <th>Étudiant</th>
             <th>Cours</th>
             <th>Valeur</th>
+            <th>Publication</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -18,6 +19,9 @@
             <td>{{ note.etudiant ? note.etudiant.matricule : '' }}</td>
             <td>{{ note.cours ? note.cours.nom : '' }}</td>
             <td>{{ note.note }}</td>
+            <td>
+                {{ note.isPublished ? 'Publiée' : 'Non publiée' }}
+            </td>
             <td>
                 <a href="{{ path('admin_note_edit', {id: note.id}) }}" class="btn btn-sm btn-warning">Modifier</a>
                 <form method="post" action="{{ path('admin_note_delete', {id: note.id}) }}" style="display:inline-block;" onsubmit="return confirm('Supprimer cette note ?');">

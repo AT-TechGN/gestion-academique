@@ -5,6 +5,8 @@ namespace App\Form;
 use App\Entity\Note;
 use App\Entity\Etudiant;
 use App\Entity\Cours;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -47,6 +49,18 @@ class NoteTypeForm extends AbstractType
                 'widget' => 'single_text',
                 'attr' => ['class' => 'form-control'],
                 'label' => 'Date de l\'évaluation'
+            ])
+            ->add('type', ChoiceType::class, [
+                'choices' => [
+                    'Partiel' => 'partiel',
+                    'Examen' => 'examen'
+                ],
+                'attr' => ['class' => 'form-select'],
+                'label' => 'Type d\'évaluation'
+            ])
+            ->add('isPublished', CheckboxType::class, [
+                'label' => 'Publier la note',
+                'attr' => false,
             ]);
     }
 

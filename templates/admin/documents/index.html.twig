@@ -1,0 +1,33 @@
+{% extends 'base.admin.html.twig' %}
+{% block content %}
+<h2>Bibliothèque de documents</h2>
+<a href="{{ path('admin_document_new') }}" class="btn btn-primary mb-3">Ajouter un document</a>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Titre</th>
+            <th>Type</th>
+            <th>Cours</th>
+            <th>Date</th>
+            <th>Fichier</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for doc in documents %}
+        <tr>
+            <td>{{ doc.titre }}</td>
+            <td>{{ doc.type|upper }}</td>
+            <td>{{ doc.cours ? doc.cours.nom : '' }}</td>
+            <td>{{ doc.dateUpload|date('d/m/Y H:i') }}</td>
+            <td>
+                <a href="{{ asset('uploads/documents/' ~ doc.fichier) }}" target="_blank">Télécharger</a>
+            </td>
+            <td>
+                <a href="{{ path('admin_document_download', {id: doc.id}) }}" class="btn btn-sm btn-success">Télécharger</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

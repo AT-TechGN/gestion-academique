@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : lun. 02 juin 2025 à 01:23
+-- Généré le : mar. 03 juin 2025 à 03:13
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -35,6 +35,13 @@ CREATE TABLE `cours` (
   `description` longtext NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Déchargement des données de la table `cours`
+--
+
+INSERT INTO `cours` (`id`, `nom`, `code`, `volume_horaire`, `description`) VALUES
+(1, 'Web technologie 1', 'HTML & CSS', 3, 'Web technologie 1');
+
 -- --------------------------------------------------------
 
 --
@@ -45,6 +52,13 @@ CREATE TABLE `cours_enseignant` (
   `cours_id` int(11) NOT NULL,
   `enseignant_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `cours_enseignant`
+--
+
+INSERT INTO `cours_enseignant` (`cours_id`, `enseignant_id`) VALUES
+(1, 1);
 
 -- --------------------------------------------------------
 
@@ -68,7 +82,9 @@ INSERT INTO `doctrine_migration_versions` (`version`, `executed_at`, `execution_
 ('DoctrineMigrations\\Version20250601042954', '2025-06-01 06:33:42', 13),
 ('DoctrineMigrations\\Version20250601203534', '2025-06-01 22:36:51', 186),
 ('DoctrineMigrations\\Version20250601230218', '2025-06-02 01:02:24', 59),
-('DoctrineMigrations\\Version20250601231926', '2025-06-02 01:19:31', 120);
+('DoctrineMigrations\\Version20250601231926', '2025-06-02 01:19:31', 120),
+('DoctrineMigrations\\Version20250602235135', '2025-06-03 01:51:50', 80),
+('DoctrineMigrations\\Version20250603010538', '2025-06-03 03:05:47', 92);
 
 -- --------------------------------------------------------
 
@@ -81,8 +97,16 @@ CREATE TABLE `document` (
   `cours_id` int(11) NOT NULL,
   `titre` varchar(100) NOT NULL,
   `fichier` varchar(255) NOT NULL,
-  `date_upload` datetime NOT NULL
+  `date_upload` datetime NOT NULL,
+  `type` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `document`
+--
+
+INSERT INTO `document` (`id`, `cours_id`, `titre`, `fichier`, `date_upload`, `type`) VALUES
+(1, 1, 'Conception des systeme informatiques', '683e4ad676333.pdf', '2025-06-03 03:07:31', 'cours');
 
 -- --------------------------------------------------------
 
@@ -99,6 +123,13 @@ CREATE TABLE `emploi` (
   `heure_debut` time NOT NULL,
   `heure_fin` time NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `emploi`
+--
+
+INSERT INTO `emploi` (`id`, `cours_id`, `enseignant_id`, `salle`, `jour`, `heure_debut`, `heure_fin`) VALUES
+(1, 1, 1, 'Amphi B1', 'Mardi', '11:00:00', '14:00:00');
 
 -- --------------------------------------------------------
 
@@ -188,8 +219,17 @@ CREATE TABLE `note` (
   `etudiant_id` int(11) NOT NULL,
   `cours_id` int(11) NOT NULL,
   `note` decimal(5,2) NOT NULL,
-  `date_eval` date NOT NULL
+  `date_eval` date NOT NULL,
+  `type` varchar(20) NOT NULL,
+  `is_published` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `note`
+--
+
+INSERT INTO `note` (`id`, `etudiant_id`, `cours_id`, `note`, `date_eval`, `type`, `is_published`) VALUES
+(1, 1, 1, 10.00, '2025-05-01', '', 0);
 
 -- --------------------------------------------------------
 
@@ -306,19 +346,19 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT pour la table `cours`
 --
 ALTER TABLE `cours`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT pour la table `document`
 --
 ALTER TABLE `document`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT pour la table `emploi`
 --
 ALTER TABLE `emploi`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT pour la table `enseignant`
@@ -342,7 +382,7 @@ ALTER TABLE `messenger_messages`
 -- AUTO_INCREMENT pour la table `note`
 --
 ALTER TABLE `note`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT pour la table `user`

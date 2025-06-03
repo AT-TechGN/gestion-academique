@@ -26,6 +26,24 @@ class Document
     #[ORM\Column]
     private ?\DateTime $dateUpload = null;
 
+    public function __construct()
+    {
+        $this->dateUpload = new \DateTime();
+    }
+
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $type = null;
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+    public function setType(?string $type): static
+    {
+        $this->type = $type;
+        return $this;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -39,7 +57,6 @@ class Document
     public function setTitre(string $titre): static
     {
         $this->titre = $titre;
-
         return $this;
     }
 
@@ -51,7 +68,6 @@ class Document
     public function setFichier(string $fichier): static
     {
         $this->fichier = $fichier;
-
         return $this;
     }
 
@@ -63,7 +79,6 @@ class Document
     public function setCours(?Cours $cours): static
     {
         $this->cours = $cours;
-
         return $this;
     }
 
@@ -75,7 +90,6 @@ class Document
     public function setDateUpload(\DateTime $dateUpload): static
     {
         $this->dateUpload = $dateUpload;
-
         return $this;
     }
 }
