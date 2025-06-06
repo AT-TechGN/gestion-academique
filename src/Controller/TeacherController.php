@@ -89,65 +89,65 @@ final class TeacherController extends AbstractController
         ]);
     }
 
-    #[Route('/courses', name: 'teacher_courses')]
-    public function courses(CoursRepository $coursRepo): Response
-    {
-        $enseignant = $this->getUser()?->getEnseignant();
-        $cours = $coursRepo->createQueryBuilder('c')
-            ->join('c.enseignants', 'e')
-            ->where('e = :enseignant')
-            ->setParameter('enseignant', $enseignant)
-            ->getQuery()
-            ->getResult();
+    // #[Route('/courses', name: 'teacher_courses')]
+    // public function courses(CoursRepository $coursRepo): Response
+    // {
+    //     $enseignant = $this->getUser()?->getEnseignant();
+    //     $cours = $coursRepo->createQueryBuilder('c')
+    //         ->join('c.enseignants', 'e')
+    //         ->where('e = :enseignant')
+    //         ->setParameter('enseignant', $enseignant)
+    //         ->getQuery()
+    //         ->getResult();
 
-        return $this->render('teacher/courses.html.twig', [
-            'cours' => $cours,
-        ]);
-    }
+    //     return $this->render('teacher/courses.html.twig', [
+    //         'cours' => $cours,
+    //     ]);
+    // }
 
-    #[Route('/emplois', name: 'teacher_emplois')]
-    public function emplois(EmploiRepository $emploiRepo): Response
-    {
-        $enseignant = $this->getUser()?->getEnseignant();
-        $emplois = $emploiRepo->findBy(['enseignant' => $enseignant]);
-        return $this->render('teacher/emplois.html.twig', [
-            'emplois' => $emplois,
-        ]);
-    }
+    // #[Route('/emplois', name: 'teacher_emplois')]
+    // public function emplois(EmploiRepository $emploiRepo): Response
+    // {
+    //     $enseignant = $this->getUser()?->getEnseignant();
+    //     $emplois = $emploiRepo->findBy(['enseignant' => $enseignant]);
+    //     return $this->render('teacher/emplois.html.twig', [
+    //         'emplois' => $emplois,
+    //     ]);
+    // }
 
-    #[Route('/notes', name: 'teacher_notes')]
-    public function notes(NoteRepository $noteRepo): Response
-    {
-        $enseignant = $this->getUser()?->getEnseignant();
-        $notes = $noteRepo->findBy(['enseignant' => $enseignant]);
-        return $this->render('teacher/notes.html.twig', [
-            'notes' => $notes,
-        ]);
-    }
+    // #[Route('/notes', name: 'teacher_notes')]
+    // public function notes(NoteRepository $noteRepo): Response
+    // {
+    //     $enseignant = $this->getUser()?->getEnseignant();
+    //     $notes = $noteRepo->findBy(['enseignant' => $enseignant]);
+    //     return $this->render('teacher/notes.html.twig', [
+    //         'notes' => $notes,
+    //     ]);
+    // }
 
-    #[Route('/documents', name: 'teacher_documents')]
-    public function documents(DocumentRepository $docRepo): Response
-    {
-        $enseignant = $this->getUser()?->getEnseignant();
-        $documents = $docRepo->createQueryBuilder('d')
-            ->join('d.cours', 'c')
-            ->join('c.enseignants', 'e')
-            ->where('e = :enseignant')
-            ->setParameter('enseignant', $enseignant)
-            ->getQuery()
-            ->getResult();
+    // #[Route('/documents', name: 'teacher_documents')]
+    // public function documents(DocumentRepository $docRepo): Response
+    // {
+    //     $enseignant = $this->getUser()?->getEnseignant();
+    //     $documents = $docRepo->createQueryBuilder('d')
+    //         ->join('d.cours', 'c')
+    //         ->join('c.enseignants', 'e')
+    //         ->where('e = :enseignant')
+    //         ->setParameter('enseignant', $enseignant)
+    //         ->getQuery()
+    //         ->getResult();
 
-        return $this->render('teacher/documents.html.twig', [
-            'documents' => $documents,
-        ]);
-    }
+    //     return $this->render('teacher/documents.html.twig', [
+    //         'documents' => $documents,
+    //     ]);
+    // }
 
-    #[Route('/profile', name: 'teacher_profile')]
-    public function profile(): Response
-    {
-        $enseignant = $this->getUser()?->getEnseignant();
-        return $this->render('teacher/profile.html.twig', [
-            'enseignant' => $enseignant,
-        ]);
-    }
+    // #[Route('/profile', name: 'teacher_profile')]
+    // public function profile(): Response
+    // {
+    //     $enseignant = $this->getUser()?->getEnseignant();
+    //     return $this->render('teacher/profile.html.twig', [
+    //         'enseignant' => $enseignant,
+    //     ]);
+    // }
 }
