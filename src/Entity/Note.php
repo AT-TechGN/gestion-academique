@@ -22,6 +22,11 @@ class Note
     #[ORM\JoinColumn(nullable: false)]
     private ?Cours $cours = null;
 
+    // --- AJOUT DE LA RELATION ENSEIGNANT ---
+    #[ORM\ManyToOne(targetEntity: Enseignant::class, inversedBy: 'notes')]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Enseignant $enseignant = null;
+
     #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2)]
     private ?string $note = null;
 
@@ -31,28 +36,8 @@ class Note
     #[ORM\Column(length: 20)]
     private ?string $type = null; // 'partiel', 'examen', etc.
 
-    public function getType(): ?string
-    {
-        return $this->type;
-    }
-    public function setType(?string $type): static
-    {
-        $this->type = $type;
-        return $this;
-    }
-
     #[ORM\Column(type: 'boolean')]
     private bool $isPublished = false;
-
-    public function isPublished(): bool
-    {
-        return $this->isPublished;
-    }
-    public function setIsPublished(bool $isPublished): static
-    {
-        $this->isPublished = $isPublished;
-        return $this;
-    }
 
     public function getId(): ?int
     {
@@ -67,7 +52,6 @@ class Note
     public function setEtudiant(?Etudiant $etudiant): static
     {
         $this->etudiant = $etudiant;
-
         return $this;
     }
 
@@ -79,7 +63,17 @@ class Note
     public function setCours(?Cours $cours): static
     {
         $this->cours = $cours;
+        return $this;
+    }
 
+    public function getEnseignant(): ?Enseignant
+    {
+        return $this->enseignant;
+    }
+
+    public function setEnseignant(?Enseignant $enseignant): static
+    {
+        $this->enseignant = $enseignant;
         return $this;
     }
 
@@ -91,7 +85,6 @@ class Note
     public function setNote(string $note): static
     {
         $this->note = $note;
-
         return $this;
     }
 
@@ -103,7 +96,28 @@ class Note
     public function setDateEval(\DateTime $dateEval): static
     {
         $this->dateEval = $dateEval;
+        return $this;
+    }
 
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(?string $type): static
+    {
+        $this->type = $type;
+        return $this;
+    }
+
+    public function isPublished(): bool
+    {
+        return $this->isPublished;
+    }
+
+    public function setIsPublished(bool $isPublished): static
+    {
+        $this->isPublished = $isPublished;
         return $this;
     }
 }

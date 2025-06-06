@@ -1,0 +1,111 @@
+{% extends 'base.teacher.html.twig' %}
+
+{% block title %}Tableau de Bord Enseignant{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1 class="h3 mb-4">Tableau de Bord Enseignant</h1>
+    <div class="row">
+        <!-- Stat Cours -->
+        <div class="col-12 col-sm-6 col-lg-3 mb-4">
+            <div class="card border-start-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Cours affectés</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.courses }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-journal-bookmark fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Stat Étudiants -->
+        <div class="col-12 col-sm-6 col-lg-3 mb-4">
+            <div class="card border-start-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Effectif étudiants</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.students }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-people fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Stat Moyenne -->
+        <div class="col-12 col-sm-6 col-lg-3 mb-4">
+            <div class="card border-start-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Moyenne générale</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ moyenne is not null ? moyenne : 'N/A' }}/20</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-bar-chart fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Stat Documents -->
+        <div class="col-12 col-sm-6 col-lg-3 mb-4">
+            <div class="card border-start-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Documents pédagogiques</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.documents }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-folder2-open fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Derniers cours -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Derniers cours affectés</h6>
+        </div>
+        <div class="card-body">
+            <ul>
+                {% for cours in recentCourses %}
+                    <li>{{ cours.nom }}</li>
+                {% else %}
+                    <li>Aucun cours récent</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <!-- Derniers documents -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Derniers documents partagés</h6>
+        </div>
+        <div class="card-body">
+            <ul>
+                {% for doc in recentDocuments %}
+                    <li>{{ doc.titre }} ({{ doc.type|upper }})</li>
+                {% else %}
+                    <li>Aucun document partagé récemment</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : mar. 03 juin 2025 à 03:13
+-- Généré le : ven. 06 juin 2025 à 13:38
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -40,7 +40,8 @@ CREATE TABLE `cours` (
 --
 
 INSERT INTO `cours` (`id`, `nom`, `code`, `volume_horaire`, `description`) VALUES
-(1, 'Web technologie 1', 'HTML & CSS', 3, 'Web technologie 1');
+(1, 'Web technologie 1', 'HTML & CSS', 3, 'Web technologie 1'),
+(2, 'Le Framework Django', 'Django', 3, 'Cours complet django et python');
 
 -- --------------------------------------------------------
 
@@ -58,7 +59,8 @@ CREATE TABLE `cours_enseignant` (
 --
 
 INSERT INTO `cours_enseignant` (`cours_id`, `enseignant_id`) VALUES
-(1, 1);
+(1, 1),
+(2, 2);
 
 -- --------------------------------------------------------
 
@@ -84,7 +86,8 @@ INSERT INTO `doctrine_migration_versions` (`version`, `executed_at`, `execution_
 ('DoctrineMigrations\\Version20250601230218', '2025-06-02 01:02:24', 59),
 ('DoctrineMigrations\\Version20250601231926', '2025-06-02 01:19:31', 120),
 ('DoctrineMigrations\\Version20250602235135', '2025-06-03 01:51:50', 80),
-('DoctrineMigrations\\Version20250603010538', '2025-06-03 03:05:47', 92);
+('DoctrineMigrations\\Version20250603010538', '2025-06-03 03:05:47', 92),
+('DoctrineMigrations\\Version20250605201819', '2025-06-05 22:18:25', 53);
 
 -- --------------------------------------------------------
 
@@ -106,7 +109,8 @@ CREATE TABLE `document` (
 --
 
 INSERT INTO `document` (`id`, `cours_id`, `titre`, `fichier`, `date_upload`, `type`) VALUES
-(1, 1, 'Conception des systeme informatiques', '683e4ad676333.pdf', '2025-06-03 03:07:31', 'cours');
+(1, 1, 'Conception des systeme informatiques', '683e4ad676333.pdf', '2025-06-03 03:07:31', 'cours'),
+(2, 1, 'Le Framework Django (python)', '68421a638cef8.pdf', '2025-06-06 00:29:55', 'cours');
 
 -- --------------------------------------------------------
 
@@ -129,7 +133,7 @@ CREATE TABLE `emploi` (
 --
 
 INSERT INTO `emploi` (`id`, `cours_id`, `enseignant_id`, `salle`, `jour`, `heure_debut`, `heure_fin`) VALUES
-(1, 1, 1, 'Amphi B1', 'Mardi', '11:00:00', '14:00:00');
+(1, 1, 2, 'Amphi B1', 'Mardi', '11:00:00', '14:00:00');
 
 -- --------------------------------------------------------
 
@@ -149,7 +153,8 @@ CREATE TABLE `enseignant` (
 --
 
 INSERT INTO `enseignant` (`id`, `user_id`, `specialite`, `telephone`) VALUES
-(1, 1, 'PHP', '627979359');
+(1, 1, 'PHP', '627979359'),
+(2, 3, 'Python', '627806101');
 
 -- --------------------------------------------------------
 
@@ -161,6 +166,13 @@ CREATE TABLE `enseignant_cours` (
   `enseignant_id` int(11) NOT NULL,
   `cours_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `enseignant_cours`
+--
+
+INSERT INTO `enseignant_cours` (`enseignant_id`, `cours_id`) VALUES
+(2, 1);
 
 -- --------------------------------------------------------
 
@@ -221,15 +233,16 @@ CREATE TABLE `note` (
   `note` decimal(5,2) NOT NULL,
   `date_eval` date NOT NULL,
   `type` varchar(20) NOT NULL,
-  `is_published` tinyint(1) NOT NULL
+  `is_published` tinyint(1) NOT NULL,
+  `enseignant_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `note`
 --
 
-INSERT INTO `note` (`id`, `etudiant_id`, `cours_id`, `note`, `date_eval`, `type`, `is_published`) VALUES
-(1, 1, 1, 10.00, '2025-05-01', '', 0);
+INSERT INTO `note` (`id`, `etudiant_id`, `cours_id`, `note`, `date_eval`, `type`, `is_published`, `enseignant_id`) VALUES
+(1, 1, 1, 10.00, '2025-05-01', '', 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -251,7 +264,10 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `email`, `roles`, `password`, `is_verified`, `created_at`) VALUES
-(1, 'alcenytraore68@gmail.com', '[\"ROLE_ADMIN\"]', '$2y$13$4pyBtf0hA8PzNF3rYQG.3ezBZ7m2Q7pxHj.NVflmiU3rutsEMbYlS', 0, '2025-05-31 20:33:42');
+(1, 'alcenytraore68@gmail.com', '[\"ROLE_ADMIN\"]', '$2y$13$4pyBtf0hA8PzNF3rYQG.3ezBZ7m2Q7pxHj.NVflmiU3rutsEMbYlS', 0, '2025-05-31 20:33:42'),
+(3, 'prof@gmail.com', '[\"ROLE_TEACHER\"]', '$2y$13$HDnmSxR8duNC7qun6jpqI.LnuZTv0LHhMdKFC2Td5HdN2AYlYC6Ra', 1, '2025-06-04 16:07:54'),
+(4, 'prof2@gmail.com', '[\"ROLE_TEACHER\"]', '$2y$13$y8EALBFs4ix.yxDPWcOOqOVc6jZnrqfkOVkZxlcRVhhfc1nIxG/4O', 1, '2025-06-04 18:15:26'),
+(5, 'enseignant@gmail.com', '[\"ROLE_TEACHER\"]', '$2y$13$cJfBTOmTvjTQPMM6eBmJT.QAn1Iy5cSW2PR2q/jaPVemwWy84wfjO', 0, '2025-06-05 22:43:57');
 
 --
 -- Index pour les tables déchargées
@@ -329,7 +345,8 @@ ALTER TABLE `messenger_messages`
 ALTER TABLE `note`
   ADD PRIMARY KEY (`id`),
   ADD KEY `IDX_CFBDFA14DDEAB1A3` (`etudiant_id`),
-  ADD KEY `IDX_CFBDFA147ECF78B0` (`cours_id`);
+  ADD KEY `IDX_CFBDFA147ECF78B0` (`cours_id`),
+  ADD KEY `IDX_CFBDFA14E455FCC0` (`enseignant_id`);
 
 --
 -- Index pour la table `user`
@@ -346,13 +363,13 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT pour la table `cours`
 --
 ALTER TABLE `cours`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT pour la table `document`
 --
 ALTER TABLE `document`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT pour la table `emploi`
@@ -364,7 +381,7 @@ ALTER TABLE `emploi`
 -- AUTO_INCREMENT pour la table `enseignant`
 --
 ALTER TABLE `enseignant`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT pour la table `etudiant`
@@ -388,7 +405,7 @@ ALTER TABLE `note`
 -- AUTO_INCREMENT pour la table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Contraintes pour les tables déchargées
@@ -438,7 +455,8 @@ ALTER TABLE `etudiant`
 --
 ALTER TABLE `note`
   ADD CONSTRAINT `FK_CFBDFA147ECF78B0` FOREIGN KEY (`cours_id`) REFERENCES `cours` (`id`),
-  ADD CONSTRAINT `FK_CFBDFA14DDEAB1A3` FOREIGN KEY (`etudiant_id`) REFERENCES `etudiant` (`id`);
+  ADD CONSTRAINT `FK_CFBDFA14DDEAB1A3` FOREIGN KEY (`etudiant_id`) REFERENCES `etudiant` (`id`),
+  ADD CONSTRAINT `FK_CFBDFA14E455FCC0` FOREIGN KEY (`enseignant_id`) REFERENCES `enseignant` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

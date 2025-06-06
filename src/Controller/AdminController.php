@@ -20,6 +20,7 @@ use App\Entity\Emploi;
 use App\Form\EmploiTypeForm;
 use App\Entity\Document;
 use App\Form\DocumentTypeForm;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use App\Repository\DocumentRepository;
 use App\Repository\EmploiRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -95,14 +96,30 @@ class AdminController extends AbstractController
 
      
 
+     // Ajoute UserPasswordHasherInterface en argument de la méthode :
     #[Route('/user/new', name: 'admin_user_new')]
-    public function newUser(Request $request, EntityManagerInterface $em): Response
+    /**
+     * Crée un nouvel utilisateur.
+     *
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @param UserPasswordHasherInterface $passwordHasher
+     * @return Response
+     */
+    public function newUser(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher): Response
     {
         $user = new User();
         $form = $this->createForm(UserTypeForm::class, $user);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            // Encodage du mot de passe
+            $plainPassword = $form->get('plainPassword')->getData();
+            if ($plainPassword) {
+                $hashedPassword = $passwordHasher->hashPassword($user, $plainPassword);
+                $user->setPassword($hashedPassword);
+            }
+
             $em->persist($user);
             $em->flush();
 

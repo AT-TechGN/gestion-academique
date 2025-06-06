@@ -1,0 +1,13 @@
+{% extends 'base.teacher.html.twig' %}
+{% block title %}Mon profil{% endblock %}
+{% block content %}
+<h2 class="mb-4 text-primary">Mon profil</h2>
+<div class="card">
+    <div class="card-body">
+        <p><strong>Nom :</strong> {{ enseignant.nom }}</p>
+        <p><strong>Prénom :</strong> {{ enseignant.prenom }}</p>
+        <p><strong>Email :</strong> {{ enseignant.user.email }}</p>
+        <!-- Ajoute d'autres infos si besoin -->
+    </div>
+</div>
+{% endblock %}

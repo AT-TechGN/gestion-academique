@@ -1,0 +1,14 @@
+{% extends 'base.teacher.html.twig' %}
+{% block title %}Mes cours{% endblock %}
+{% block content %}
+<h2 class="mb-4 text-primary">Mes cours</h2>
+<div class="table-responsive">
+    <ul class="list-group">
+        {% for c in cours %}
+            <li class="list-group-item">{{ c.nom }}</li>
+        {% else %}
+            <li class="list-group-item text-muted">Aucun cours affecté</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
