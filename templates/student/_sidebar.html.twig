@@ -1,0 +1,161 @@
+<style>
+    .sidebar-student {
+        background: #198754;
+        color: #fff;
+        width: 230px;
+        min-height: 100vh;
+        box-shadow: 2px 0 12px rgba(25,135,84,0.08);
+        border-radius: 0 16px 16px 0;
+        transition: left 0.3s, width 0.3s;
+        position: sticky;
+        top: 0;
+        z-index: 1030;
+    }
+    @media (max-width: 991.98px) {
+        .sidebar-student {
+            position: fixed;
+            left: -250px;
+            top: 0;
+            width: 220px;
+            min-height: 100vh;
+            border-radius: 0 16px 16px 0;
+            transition: left 0.3s;
+        }
+        .sidebar-student.show {
+            left: 0;
+        }
+        .sidebar-overlay {
+            display: block !important;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.2);
+            z-index: 1029;
+        }
+    }
+    .sidebar-overlay { display: none; }
+    .sidebar-toggle-btn {
+        display: none;
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        z-index: 1040;
+        background: #198754;
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        width: 44px;
+        height: 44px;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    @media (max-width: 991.98px) {
+        .sidebar-toggle-btn { display: flex; }
+    }
+    .sidebar-student .nav-link.active, .sidebar-student .nav-link:hover {
+        background: #fff !important;
+        color: #198754 !important;
+        font-weight: bold;
+        border-radius: 8px;
+    }
+    .sidebar-student .nav-link {
+        color: #fff;
+        transition: background 0.2s, color 0.2s;
+        margin-bottom: 6px;
+    }
+    .sidebar-student .logout-btn {
+        background: #f8f9fa;
+        color: #dc3545;
+        border: none;
+        width: 100%;
+        margin-top: 30px;
+        font-weight: bold;
+        border-radius: 8px;
+        transition: background 0.2s, color 0.2s;
+    }
+    .sidebar-student .logout-btn:hover {
+        background: #dc3545;
+        color: #fff;
+    }
+    .sidebar-student h4 {
+        color: #fff;
+        font-weight: bold;
+    }
+</style>
+
+<button class="sidebar-toggle-btn" id="sidebarToggle" aria-label="Menu">
+    <i class="bi bi-list"></i>
+</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<div class="sidebar-student p-3 d-flex flex-column justify-content-between" id="sidebarStudent">
+    <div>
+        <div class="text-center mb-4">
+            <h4><i class="bi bi-person"></i> Étudiant</h4>
+        </div>
+        <ul class="nav nav-pills flex-column">
+            <li class="nav-item">
+                <a href="{{ path('student_dashboard') }}"
+                   class="nav-link {{ app.request.get('_route') == 'student_dashboard' ? 'active' : '' }}">
+                    <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ path('student_courses') }}"
+                   class="nav-link {{ app.request.get('_route') == 'student_courses' ? 'active' : '' }}">
+                    <i class="bi bi-journal-bookmark me-2"></i> Mes cours
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ path('student_emplois') }}"
+                   class="nav-link {{ app.request.get('_route') == 'student_emplois' ? 'active' : '' }}">
+                    <i class="bi bi-calendar-week me-2"></i> Emploi du temps
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ path('student_notes') }}"
+                   class="nav-link {{ app.request.get('_route') == 'student_notes' ? 'active' : '' }}">
+                    <i class="bi bi-clipboard-data me-2"></i> Mes notes
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ path('student_documents') }}"
+                   class="nav-link {{ app.request.get('_route') == 'student_documents' ? 'active' : '' }}">
+                    <i class="bi bi-folder2-open me-2"></i> Documents
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ path('student_profile') }}"
+                   class="nav-link {{ app.request.get('_route') == 'student_profile' ? 'active' : '' }}">
+                    <i class="bi bi-person-circle me-2"></i> Mon profil
+                </a>
+            </li>
+        </ul>
+    </div>
+    <form method="post" action="{{ path('app_logout') }}">
+        <button type="submit" class="logout-btn mt-4">
+            <i class="bi bi-box-arrow-right me-2"></i> Déconnexion
+        </button>
+    </form>
+</div>
+<script>
+    const sidebar = document.getElementById('sidebarStudent');
+    const toggleBtn = document.getElementById('sidebarToggle');
+    const overlay = document.getElementById('sidebarOverlay');
+    toggleBtn.addEventListener('click', function() {
+        sidebar.classList.add('show');
+        overlay.classList.add('sidebar-overlay');
+    });
+    overlay.addEventListener('click', function() {
+        sidebar.classList.remove('show');
+        overlay.classList.remove('sidebar-overlay');
+    });
+    document.querySelectorAll('#sidebarStudent .nav-link').forEach(function(link) {
+        link.addEventListener('click', function() {
+            if(window.innerWidth < 992) {
+                sidebar.classList.remove('show');
+                overlay.classList.remove('sidebar-overlay');
+            }
+        });
+    });
+</script>

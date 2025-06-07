@@ -1,0 +1,39 @@
+{% extends 'base.student.html.twig' %}
+{% block title %}Mes notes{% endblock %}
+{% block content %}
+<h2 class="mb-4 text-success">Mes notes</h2>
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Cours</th>
+                <th>Note</th>
+                <th>Type</th>
+                <th>Date</th>
+                <th>Publié</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for note in notes %}
+                <tr>
+                    <td>{{ note.cours.nom }}</td>
+                    <td>{{ note.note }}</td>
+                    <td>{{ note.type }}</td>
+                    <td>{{ note.dateEval|date('d/m/Y') }}</td>
+                    <td>
+                        {% if note.isPublished() %}
+                            <span class="badge bg-success">Oui</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Non</span>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5" class="text-muted text-center">Aucune note</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

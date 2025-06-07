@@ -1,0 +1,39 @@
+{% extends 'base.teacher.html.twig' %}
+{% block title %}Notes & Evaluations{% endblock %}
+{% block content %}
+<h2 class="mb-4 text-primary">Notes & Evaluations</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Étudiant</th>
+            <th>Cours</th>
+            <th>Note</th>
+            <th>Type</th>
+            <th>Date</th>
+            <th>Publié</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for note in notes %}
+            <tr>
+                <td>{{ note.etudiant.matricule }}</td>
+                <td>{{ note.cours.nom }}</td>
+                <td>{{ note.note }}</td>
+                <td>{{ note.type }}</td>
+                <td>{{ note.dateEval|date('d/m/Y') }}</td>
+                <td>
+                    {% if note.isPublished() %}
+                        <span class="badge bg-success">Oui</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Non</span>
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6" class="text-muted text-center">Aucune note saisie</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

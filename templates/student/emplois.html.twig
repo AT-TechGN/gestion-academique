@@ -1,0 +1,16 @@
+{% extends 'base.student.html.twig' %}
+{% block title %}Emploi du temps{% endblock %}
+{% block content %}
+<h2 class="mb-4 text-success">Emploi du temps</h2>
+<div class="table-responsive">
+    <ul class="list-group">
+        {% for emploi in emplois %}
+            <li class="list-group-item">
+                {{ emploi.jour }} : {{ emploi.heureDebut|date('H:i') }} - {{ emploi.heureFin|date('H:i') }} ({{ emploi.salle }})
+            </li>
+        {% else %}
+            <li class="list-group-item text-muted">Aucun emploi du temps</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\User;
+use App\Entity\Cours;
 
 #[ORM\Entity(repositoryClass: EtudiantRepository::class)]
 class Etudiant
@@ -40,9 +42,17 @@ class Etudiant
     #[ORM\OneToMany(targetEntity: Note::class, mappedBy: 'etudiant')]
     private Collection $notes;
 
+    /**
+     * @var Collection<int, Cours>
+     */
+    #[ORM\ManyToMany(targetEntity: Cours::class)]
+    #[ORM\JoinTable(name: "cours_etudiant")]
+    private Collection $cours;
+
     public function __construct()
     {
         $this->notes = new ArrayCollection();
+        $this->cours = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -149,6 +159,28 @@ class Etudiant
             }
         }
 
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Cours>
+     */
+    public function getCours(): Collection
+    {
+        return $this->cours;
+    }
+
+    public function addCours(Cours $cours): static
+    {
+        if (!$this->cours->contains($cours)) {
+            $this->cours->add($cours);
+        }
+        return $this;
+    }
+
+    public function removeCours(Cours $cours): static
+    {
+        $this->cours->removeElement($cours);
         return $this;
     }
 }
