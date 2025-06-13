@@ -49,6 +49,12 @@ class Etudiant
     #[ORM\JoinTable(name: "cours_etudiant")]
     private Collection $cours;
 
+    #[ORM\Column(length: 255)]
+    private ?string $nom = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $prenom = null;
+
     public function __construct()
     {
         $this->notes = new ArrayCollection();
@@ -181,6 +187,30 @@ class Etudiant
     public function removeCours(Cours $cours): static
     {
         $this->cours->removeElement($cours);
+        return $this;
+    }
+
+    public function getNom(): ?string
+    {
+        return $this->nom;
+    }
+
+    public function setNom(string $nom): static
+    {
+        $this->nom = $nom;
+
+        return $this;
+    }
+
+    public function getPrenom(): ?string
+    {
+        return $this->prenom;
+    }
+
+    public function setPrenom(string $prenom): static
+    {
+        $this->prenom = $prenom;
+
         return $this;
     }
 }

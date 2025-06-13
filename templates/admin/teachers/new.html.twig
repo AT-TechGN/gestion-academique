@@ -2,9 +2,19 @@
 
 {% block content %}
 <h2>Nouvel enseignant</h2>
-<div class="card shadow-sm p-4" style="max-width:600px;margin:auto;">
+<div class="card shadow-sm p-4" style="max-width: 700px; margin: auto;">
     {{ form_start(form) }}
         <div class="row">
+            <div class="col-md-6 mb-3">
+                {{ form_label(form.nom) }}
+                {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.nom) }}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ form_label(form.prenom) }}
+                {{ form_widget(form.prenom, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.prenom) }}
+            </div>
             <div class="col-md-6 mb-3">
                 {{ form_label(form.user) }}
                 {{ form_widget(form.user, {'attr': {'class': 'form-control'}}) }}
@@ -26,7 +36,7 @@
                 {{ form_errors(form.cours) }}
             </div>
         </div>
-        <button class="btn btn-success mt-3">Enregistrer</button>
+        <button class="btn btn-success mt-3">Créer</button>
         <a href="{{ path('admin_teachers') }}" class="btn btn-secondary mt-3">Retour</a>
     {{ form_end(form) }}
 </div>

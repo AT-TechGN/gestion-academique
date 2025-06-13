@@ -16,6 +16,14 @@ class EtudiantTypeForm extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->add('nom', TextType::class, [
+                'label' => 'Nom',
+                'attr' => ['class' => 'form-control']
+            ])
+            ->add('prenom', TextType::class, [
+                'label' => 'Prénom',
+                'attr' => ['class' => 'form-control']
+            ])
             ->add('matricule', TextType::class, [
                 'label' => 'Matricule',
                 'attr' => ['class' => 'form-control']

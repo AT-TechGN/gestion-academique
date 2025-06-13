@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : ven. 06 juin 2025 à 13:38
--- Version du serveur : 10.4.32-MariaDB
--- Version de PHP : 8.2.12
+-- Généré le : sam. 14 juin 2025 à 00:49
+-- Version du serveur : 10.4.27-MariaDB
+-- Version de PHP : 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -65,6 +65,17 @@ INSERT INTO `cours_enseignant` (`cours_id`, `enseignant_id`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `cours_etudiant`
+--
+
+CREATE TABLE `cours_etudiant` (
+  `etudiant_id` int(11) NOT NULL,
+  `cours_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `doctrine_migration_versions`
 --
 
@@ -87,7 +98,9 @@ INSERT INTO `doctrine_migration_versions` (`version`, `executed_at`, `execution_
 ('DoctrineMigrations\\Version20250601231926', '2025-06-02 01:19:31', 120),
 ('DoctrineMigrations\\Version20250602235135', '2025-06-03 01:51:50', 80),
 ('DoctrineMigrations\\Version20250603010538', '2025-06-03 03:05:47', 92),
-('DoctrineMigrations\\Version20250605201819', '2025-06-05 22:18:25', 53);
+('DoctrineMigrations\\Version20250605201819', '2025-06-05 22:18:25', 53),
+('DoctrineMigrations\\Version20250607193250', '2025-06-14 00:15:20', 156),
+('DoctrineMigrations\\Version20250613222108', '2025-06-14 00:21:16', 17);
 
 -- --------------------------------------------------------
 
@@ -145,16 +158,18 @@ CREATE TABLE `enseignant` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `specialite` varchar(100) NOT NULL,
-  `telephone` varchar(20) NOT NULL
+  `telephone` varchar(20) NOT NULL,
+  `nom` varchar(255) NOT NULL,
+  `prenom` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `enseignant`
 --
 
-INSERT INTO `enseignant` (`id`, `user_id`, `specialite`, `telephone`) VALUES
-(1, 1, 'PHP', '627979359'),
-(2, 3, 'Python', '627806101');
+INSERT INTO `enseignant` (`id`, `user_id`, `specialite`, `telephone`, `nom`, `prenom`) VALUES
+(1, 1, 'PHP', '627979359', 'Traoré', 'Alseny'),
+(2, 3, 'Python', '627806101', 'Sacko', 'Brema');
 
 -- --------------------------------------------------------
 
@@ -187,15 +202,17 @@ CREATE TABLE `etudiant` (
   `date_naissance` date NOT NULL,
   `adresse` varchar(255) NOT NULL,
   `telephone` varchar(20) NOT NULL,
-  `photo` varchar(255) NOT NULL
+  `photo` varchar(255) NOT NULL,
+  `nom` varchar(255) NOT NULL,
+  `prenom` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `etudiant`
 --
 
-INSERT INTO `etudiant` (`id`, `user_id`, `matricule`, `date_naissance`, `adresse`, `telephone`, `photo`) VALUES
-(1, NULL, '664120792245', '2004-05-11', 'Coyah', '627979359', '683cb34f95f36.png');
+INSERT INTO `etudiant` (`id`, `user_id`, `matricule`, `date_naissance`, `adresse`, `telephone`, `photo`, `nom`, `prenom`) VALUES
+(1, NULL, '664120792245', '2004-05-11', 'Coyah', '627979359', '683cb34f95f36.png', 'Traoré', 'Alceny');
 
 -- --------------------------------------------------------
 
@@ -242,7 +259,7 @@ CREATE TABLE `note` (
 --
 
 INSERT INTO `note` (`id`, `etudiant_id`, `cours_id`, `note`, `date_eval`, `type`, `is_published`, `enseignant_id`) VALUES
-(1, 1, 1, 10.00, '2025-05-01', '', 0, NULL);
+(1, 1, 1, '10.00', '2025-05-01', '', 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -286,6 +303,14 @@ ALTER TABLE `cours_enseignant`
   ADD PRIMARY KEY (`cours_id`,`enseignant_id`),
   ADD KEY `IDX_845FDD887ECF78B0` (`cours_id`),
   ADD KEY `IDX_845FDD88E455FCC0` (`enseignant_id`);
+
+--
+-- Index pour la table `cours_etudiant`
+--
+ALTER TABLE `cours_etudiant`
+  ADD PRIMARY KEY (`etudiant_id`,`cours_id`),
+  ADD KEY `IDX_B6EA8C3EDDEAB1A3` (`etudiant_id`),
+  ADD KEY `IDX_B6EA8C3E7ECF78B0` (`cours_id`);
 
 --
 -- Index pour la table `doctrine_migration_versions`
@@ -417,6 +442,13 @@ ALTER TABLE `user`
 ALTER TABLE `cours_enseignant`
   ADD CONSTRAINT `FK_845FDD887ECF78B0` FOREIGN KEY (`cours_id`) REFERENCES `cours` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `FK_845FDD88E455FCC0` FOREIGN KEY (`enseignant_id`) REFERENCES `enseignant` (`id`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `cours_etudiant`
+--
+ALTER TABLE `cours_etudiant`
+  ADD CONSTRAINT `FK_B6EA8C3E7ECF78B0` FOREIGN KEY (`cours_id`) REFERENCES `cours` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_B6EA8C3EDDEAB1A3` FOREIGN KEY (`etudiant_id`) REFERENCES `etudiant` (`id`) ON DELETE CASCADE;
 
 --
 -- Contraintes pour la table `document`

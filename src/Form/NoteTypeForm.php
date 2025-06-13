@@ -60,7 +60,8 @@ class NoteTypeForm extends AbstractType
             ])
             ->add('isPublished', CheckboxType::class, [
                 'label' => 'Publier la note',
-                'attr' => false,
+                'required' => false,
+                'attr' => [], // ✅ Correction ici : attr doit être un tableau
             ]);
     }
 

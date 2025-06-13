@@ -7,6 +7,8 @@
     <thead>
         <tr>
             <th>Photo</th>
+            <th>Nom</th>
+            <th>Prénom</th>
             <th>Matricule</th>
             <th>Date naissance</th>
             <th>Adresse</th>
@@ -22,6 +24,8 @@
                     <img src="{{ asset('uploads/photos/' ~ student.photo) }}" width="50" height="50" class="rounded-circle"/>
                 {% endif %}
             </td>
+            <td>{{ student.nom }}</td>
+            <td>{{ student.prenom }}</td>
             <td>{{ student.matricule }}</td>
             <td>{{ student.dateNaissance ? student.dateNaissance|date('d/m/Y') : '' }}</td>
             <td>{{ student.adresse }}</td>
